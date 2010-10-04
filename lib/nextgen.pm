@@ -79,40 +79,40 @@ For now, this module
 
 =over 12
 
-=item
+=item Perl assertion
 
 asserts 5.10.1+ is loaded -- 5.10.0 is unsupported and not forwards
   compatable because of smart match.
 
-=item
+=item strict and warnings
 
 uses the vanilla L<strict>, and L<warnings> pragmas
 
-=item
+=item features.pm
 
 adds Perl 5.10 L<features>
 
-=item
+=item indirect.pm
 
 disables indirect method syntax via L<indirect>
 
-=item
+=item autodie.pm
 
 throws fatal exceptions in a sane fashion for CORE functions via L<autodie>
 
-=item
+=item mro.pm
 
 C3 method resolution order via L<mro>
 
-=item
+=item Moose.pm
 
 adds L<Moose> if the package isn't main
 
-=item
+=item oose.pm
 
 uses L<oose>.pm if the program is run via C<perl -e>, or C<perl -E>
 
-=item
+=item namespace/autoclean.pm
 
 cleans up the class via L<namespace::autoclean> if the module has a constructor (sub new).
 
