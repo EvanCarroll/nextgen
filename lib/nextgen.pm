@@ -2,7 +2,7 @@ package nextgen;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 ## 5.10.0 not forwards compat
 use v5.10.1;
@@ -23,7 +23,7 @@ use namespace::autoclean ();
 
 BEGIN {
 	if ( $0 eq '-e' ) {
-		eval "use oose ();";
+		eval "use oose;";
 	}
 }
 

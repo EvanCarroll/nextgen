@@ -1,3 +1,19 @@
+Revision history for nextgen
+
+0.02 - 2010-10-04
+  Fixed bug with '-e' or '-E', added tests
+    Aparently `use Mod ();`, stop BEGIN {} from running, not in perldoc -f use
+
+0.01 - 2010-10-04
+	Initial fork:
+	- Added Moose for non-Main packages
+	- Added oose.pm when run under '-e', or '-E'
+  - Added autodie
+  - Added indirect
+  - Changes to Module::Install
+  - renamed to `nextgen`
+  - added ltos of tests
+
 Revision history for Modern::Perl
 
 1.03    Wed Feb 18 00:40:40 UTC 2009
