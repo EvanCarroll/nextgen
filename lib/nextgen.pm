@@ -75,22 +75,28 @@ instead write only one:
 
     use nextgen;
 
-For now, this only enables the
+For now, this module
 
 =over 12
+
+=item asserts 5.10.1+ is loaded -- 5.10.0 is unsupported and not forwards
+      compatable because of smart match.
 
 =item uses the vanilla L<strict>, and L<warnings> pragmas
 
 =item adds Perl 5.10 L<features>
 
-=item asserts 5.10.1+ is loaded -- 5.10.0 is unsupported and not forwards
-      compatable because of smart match.
+=item disables indirect method syntax via L<indirect>
+
+=item throws fatal exceptions in a sane fashion for CORE functions via L<autodie>
 
 =item C3 method resolution order via L<mro>
 
-=item disables indirect method syntax via L<indirect>
+=item adds L<Moose> if the package isn't main
 
-=item cleans up the package via L<namespace::autoclean> if the module has a constructor (sub new).
+=item uses L<oose>.pm if the program is run via C<perl -e>, or C<perl -E>
+
+=item cleans up the class via L<namespace::autoclean> if the module has a constructor (sub new).
 
 In the future, L<nextgen> will include additional CPAN modules which have proven useful and stable.
 
