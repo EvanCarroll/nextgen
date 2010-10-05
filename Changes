@@ -1,5 +1,10 @@
 Revision history for nextgen
 
+0.03 - 2010-10-04
+  With community input fixedbugs with importing Moose, over Moose::Role
+    provided a flag to disable the assumption of programming in the OO
+    paradigm
+
 0.02 - 2010-10-04
   Fixed bug with '-e' or '-E', added tests
     Aparently `use Mod ();`, stop BEGIN {} from running, not in perldoc -f use
