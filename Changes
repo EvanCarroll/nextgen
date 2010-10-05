@@ -1,7 +1,8 @@
 Revision history for nextgen
 
 0.04 - 2010-10-05
-  Reimpliment the -e portion now perl -Mnextgen -e'package Foo; use nextgen; Foo->new' works
+  Reimpliment the -e portion now `perl -Mnextgen -e'package Foo; use nextgen; Foo->new'` works
+    added t/02* for tests
 
 0.03 - 2010-10-04
   With community input fixedbugs with importing Moose, over Moose::Role
