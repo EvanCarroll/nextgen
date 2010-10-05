@@ -1,6 +1,5 @@
 #!/usr/bin/env perl
-
-use Test::More tests => 3;
+use Test::More tests => 2;
 
 BEGIN
 {
@@ -15,12 +14,3 @@ like (
 	, "No source oose.pm source filter on real for $0"
 );
 
-
-## Change name of running process
-$0 = '-e';
-delete $INC{'nextgen.pm'};
-require 'nextgen.pm';
-nextgen->import();
-
-eval { Class->new };
-is ( $@, '', 'have an oose.pm new' );
