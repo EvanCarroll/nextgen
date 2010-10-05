@@ -21,6 +21,8 @@ use Moose ();
 use B::Hooks::EndOfScope qw(on_scope_end);
 use namespace::autoclean ();
 
+use nextgen::blacklist ();
+
 sub import {
 	my ( $class, $args ) = shift;
 
@@ -28,6 +30,18 @@ sub import {
 
 	my $pkg = [caller]->[0];
 	my $caller = scalar caller;
+	
+	feature->import(':5.10');
+	indirect->unimport(':fatal');
+	autodie->import();
+
+	nextgen::blacklist->import(
+		{
+			'base.pm' => { replacement => 'parent' }
+			, 'NEXT.pm' => { replacement => 'mro' }
+		}
+		, { -callee => $caller }
+	);
 
 	## Moose will import warnings and strict by default
 	if ( !$procedural && $pkg ne 'main' ) {
@@ -35,18 +49,8 @@ sub import {
 			unless $pkg->can('meta')
 		;
 		mro::set_mro( $caller, 'c3' );
-	}
-	else {	
-		warnings->import();
-		strict->import();
-	}
-	
-	feature->import(':5.10');
-	indirect->unimport(':fatal');
-	autodie->import();
-
-	## Cleanup if the package has a new or meta (Moose::Roles)
-	unless ( $procedural ) {
+		
+		## Cleanup if the package has a new or meta (Moose::Roles)
 		on_scope_end( sub {
 			no strict qw/refs/;
 			no warnings;
@@ -55,8 +59,13 @@ sub import {
 				|| $pkg->can('meta')
 			;
 		} )
+	
 	}
-
+	else {	
+		warnings->import();
+		strict->import();
+	}
+	
 }
 
 
@@ -64,7 +73,9 @@ sub import {
 ## This is here for a reason (and I prefer to use oose.pm, even though I could just as well reimpliment it).
 ## http://search.cpan.org/~dconway/Filter-Simple/lib/Filter/Simple.pm#Using_Filter::Simple_with_an_explicit_import_subroutine
 ##
-use if $0 eq '-e', 'Filter::Simple' => sub { s/^/use oose;\n/ };
+END { use if $0 eq '-e', 'Filter::Simple' => sub { s/^/use oose;\n/ } }
+
+1;
 
 __END__
 
