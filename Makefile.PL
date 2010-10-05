@@ -13,9 +13,12 @@ requires 'indirect';
 requires 'autodie';
 requires 'B::Hooks::EndOfScope';
 requires 'namespace::autoclean';
-
 requires 'Moose';
+
+requires 'if';
 requires 'oose';
+requires 'Filter::Simple';
+
 requires 'IO::Handle';
 requires 'mro';
 requires 'utf8';

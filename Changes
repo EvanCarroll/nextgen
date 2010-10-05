@@ -1,5 +1,8 @@
 Revision history for nextgen
 
+0.04 - 2010-10-05
+  Reimpliment the -e portion now perl -Mnextgen -e'package Foo; use nextgen; Foo->new' works
+
 0.03 - 2010-10-04
   With community input fixedbugs with importing Moose, over Moose::Role
     provided a flag to disable the assumption of programming in the OO

@@ -2,7 +2,7 @@ package nextgen;
 use strict;
 use warnings;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 ## 5.10.0 not forwards compat
 use v5.10.1;
@@ -21,14 +21,10 @@ use Moose ();
 use B::Hooks::EndOfScope qw(on_scope_end);
 use namespace::autoclean ();
 
-BEGIN {
-	eval "use oose;" if $0 eq '-e';
-}
-
 sub import {
 	my ( $class, $args ) = shift;
 
-	my $procedural = 1 if grep(/:procedural/, @$args);
+	my $procedural = grep(/:procedural/, @$args) ? 1 : 0;
 
 	my $pkg = [caller]->[0];
 	my $caller = scalar caller;
@@ -62,6 +58,13 @@ sub import {
 	}
 
 }
+
+
+##
+## This is here for a reason (and I prefer to use oose.pm, even though I could just as well reimpliment it).
+## http://search.cpan.org/~dconway/Filter-Simple/lib/Filter/Simple.pm#Using_Filter::Simple_with_an_explicit_import_subroutine
+##
+use if $0 eq '-e', 'Filter::Simple' => sub { s/^/use oose;\n/ };
 
 __END__
 
