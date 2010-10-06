@@ -9,7 +9,7 @@ BEGIN
 }
 
 package Class;
-use nextgen qw/:procedural/;
+use nextgen mode => [qw(:procedural)];
 
 eval { Class->new };
 Test::More::is( $@, '', ':procedural ' );

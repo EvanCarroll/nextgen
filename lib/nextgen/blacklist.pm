@@ -1,35 +1,19 @@
 package nextgen::blacklist;
-use List::Util;
+use strict;
+use warnings;
+use feature ':5.10';
 
-use constant DEBUG => 0;
-use if DEBUG => 'Data::Dumper';
+# http://scsys.co.uk:8002/52489
 
 my %prohibited;
 
-sub _debug_prohibited {
-	use Data::Dumper;
-	die Dumper \%prohibited;
-}
-
-my $sub = sub {
-	my ( $subRef, $file ) = @_;
+sub require {
+	my $file = shift;
 	my $callers_pkg = (caller)[0];
-
-	if ( DEBUG ) {
-		die Dumper [
-			'INC CALL'
-			, {
-				subref => $subRef
-				, callers_pkg => $callers_pkg
-				, pkg => $file
-				, 'caller' => [caller]
-			}
-		];
-	}
 
 	my $pkg_bl_db = $prohibited{ $callers_pkg };
 	my $class = _pmfile_to_class( $file );
-	
+
 	if ( exists $pkg_bl_db->{$file} ) {
 		warn sprintf(
 			"nextgen::blacklist violation with import attempt for: [ %s (%s) ] try 'use %s' instead.\n"
@@ -37,10 +21,10 @@ my $sub = sub {
 			, $file
 			, $pkg_bl_db->{$file}{'replacement'}
 		);
-		exit()
+		exit;
 	}
 
-	$file;
+	CORE::require $file;
 
 };
 
@@ -51,9 +35,9 @@ sub import {
 
 	$prohibited{$callee} = $args;
 
-	unshift @INC, $sub
-		unless ref $INC[0] eq 'CODE'
-			&& $INC[0] == $sub
+	state $installed = 0;
+	*CORE::GLOBAL::require = \&require
+		unless $installed++
 	;
 
 }
@@ -72,8 +56,6 @@ sub _class_to_pmfile {
 	$file =~ s{::}{/}g;
 	return $file;
 }
-
-use nextgen qw/:procedural/;
 
 1;
 

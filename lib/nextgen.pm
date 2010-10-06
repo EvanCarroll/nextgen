@@ -2,7 +2,7 @@ package nextgen;
 use strict;
 use warnings;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 ## 5.10.0 not forwards compat
 use v5.10.1;
@@ -21,42 +21,43 @@ use Moose ();
 use B::Hooks::EndOfScope qw(on_scope_end);
 use namespace::autoclean ();
 
-use nextgen::blacklist ();
+use nextgen::blacklist;
 
 sub import {
-	my ( $class, $args ) = shift;
+	my ( $class, %args ) = @_;
 
-	my $procedural = grep(/:procedural/, @$args) ? 1 : 0;
+	my @caller = caller;
+	my $pkg = $caller[0];
 
-	my $pkg = [caller]->[0];
-	my $caller = scalar caller;
-	
+	## nextgen->import() is a noop in pkg main using perl -Mnextgen -e''
+	if (
+		$caller[2] == 0 # line
+		&& $caller[1] eq '-e' && $0 eq '-e'
+	) {
+		return ()
+	}
+
+	my $procedural = $args{'mode'} ~~ ':procedural' ? 1 : 0;
+
 	feature->import(':5.10');
 	indirect->unimport(':fatal');
 	autodie->import();
 
-	nextgen::blacklist->import(
-		{
-			'base.pm' => { replacement => 'parent' }
-			, 'NEXT.pm' => { replacement => 'mro' }
-		}
-		, { -callee => $caller }
-	);
-
 	## Moose will import warnings and strict by default
 	if ( !$procedural && $pkg ne 'main' ) {
-		Moose->import({ 'into' => $caller })
+		mro::set_mro( $pkg, 'c3' );
+		
+		Moose->import({ 'into' => $pkg })
 			unless $pkg->can('meta')
 		;
-		mro::set_mro( $caller, 'c3' );
 		
 		## Cleanup if the package has a new or meta (Moose::Roles)
 		on_scope_end( sub {
 			no strict qw/refs/;
 			no warnings;
-			namespace::autoclean->import( -cleanee => $caller )
+			namespace::autoclean->import( -cleanee => $pkg )
 				if defined $pkg->can('new')
-				|| $pkg->can('meta')
+				|| defined $pkg->can('meta')
 			;
 		} )
 	
@@ -65,15 +66,47 @@ sub import {
 		warnings->import();
 		strict->import();
 	}
+		
+	state $nextgen_default_blacklist = {
+		'base.pm' => {
+			replacement => 'parent'
+		}
+		, 'Class/Accessor.pm' => {
+			replacement => 'Moose'
+		}
+		, 'Class/Accessor/Fast.pm' => {
+			replacement => 'Moose'
+		}
+		, 'Class/Accessor/Faster.pm' => {
+			replacement => 'Moose'
+		}
+		, 'NEXT.pm' => {
+			replacement => 'mro'
+		}
+		, 'strict.pm'    => {
+			replacement => 'nextgen'
+		}
+		, 'warnings.pm'  => {
+			replacement => 'nextgen'
+		}
+		, 'autodie.pm'   => {
+			replacement => 'nextgen'
+		}
+	};
+
+	nextgen::blacklist->import(
+		$nextgen_default_blacklist
+		, { -callee => $pkg }
+	);
 	
 }
 
 
-##
-## This is here for a reason (and I prefer to use oose.pm, even though I could just as well reimpliment it).
+
+## This is here for a reason (and I prefer to use oose.pm, even though I could
+## just as well reimpliment it).
 ## http://search.cpan.org/~dconway/Filter-Simple/lib/Filter/Simple.pm#Using_Filter::Simple_with_an_explicit_import_subroutine
-##
-END { use if $0 eq '-e', 'Filter::Simple' => sub { s/^/use oose;\n/ } }
+use if $0 eq '-e', "Filter::Simple" => sub { s/^/use oose; \n use nextgen;/ };
 
 1;
 
@@ -148,7 +181,7 @@ and the author wasn't attentive enough to the needs for a more modern perl5.
 If you wish to write L<nextgen> module that doesn't assume non-"main" packages
 are object-oriented classes, then use the B<:procedural> token:
 
-    use nextgen ':procedural'
+    use nextgen mode => qw(:procedural)
 
 =head1 AUTHOR
 
@@ -208,7 +241,6 @@ under the terms of either: the GNU General Public License as published
 by the Free Software Foundation; or the Artistic License.
 
 See http://dev.perl.org/licenses/ for more information.
-
 
 =cut
 

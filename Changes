@@ -1,5 +1,8 @@
 Revision history for nextgen
 
+0.05 - 2010-10-06
+  Added support for nextgen::blacklist, for all your blacklisting needs
+
 0.04 - 2010-10-05
   Reimpliment the -e portion now `perl -Mnextgen -e'package Foo; use nextgen; Foo->new'` works
     added t/02* for tests
