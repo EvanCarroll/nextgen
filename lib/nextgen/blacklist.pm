@@ -6,6 +6,7 @@ use feature ':5.10';
 # http://scsys.co.uk:8002/52489
 
 my %prohibited;
+my $NEXT_REQUIRE;
 
 sub require {
 	my $file = shift;
@@ -23,7 +24,12 @@ sub require {
 		);
 	}
 
-	CORE::require $file;
+	if ( $NEXT_REQUIRE ) {
+		$NEXT_REQUIRE->($file);
+	}
+	else {
+		CORE::require $file;
+	}
 
 };
 
@@ -35,9 +41,17 @@ sub import {
 	$prohibited{$callee} = $args;
 
 	state $installed = 0;
-	*CORE::GLOBAL::require = \&require
-		unless $installed++
-	;
+
+	unless ( $installed ) {
+		if ( *CORE::GLOBAL::require{CODE} ) {
+			$NEXT_REQUIRE = \&{*CORE::GLOBAL::require{CODE}};
+		}
+		{
+			no warnings; # ignore redefinition
+			*CORE::GLOBAL::require = \&require;
+		}
+		$installed++;
+	}
 
 }
 
