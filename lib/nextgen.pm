@@ -29,13 +29,16 @@ sub import {
 	my @caller = caller;
 	my $pkg = $caller[0];
 
-	## nextgen->import() is a noop in pkg main using perl -Mnextgen -e''
-	if (
-		$caller[2] == 0 # line
-		&& $caller[1] eq '-e' && $0 eq '-e'
-	) {
-		return ()
-	}
+	## This will make nextgen a noop for main with -Mnextgen -e''
+	## Instead nextgen will only affect package class (per oose.pm)
+	## This is no longer desired because it permits -Mnextgen -MNEXT -e'1'
+	## So, it can stayl commented out
+	## if (
+	## 	$caller[2] == 0 # line
+	## 	&& $caller[1] eq '-e' && $0 eq '-e'
+	## ) {
+	## 	return ()
+	## }
 
 	my $procedural = (
 		$pkg eq 'main'
