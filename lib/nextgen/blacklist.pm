@@ -15,13 +15,12 @@ sub require {
 	my $class = _pmfile_to_class( $file );
 
 	if ( exists $pkg_bl_db->{$file} ) {
-		warn sprintf(
+		die sprintf(
 			"nextgen::blacklist violation with import attempt for: [ %s (%s) ] try 'use %s' instead.\n"
 			, $class
 			, $file
 			, $pkg_bl_db->{$file}{'replacement'}
 		);
-		exit;
 	}
 
 	CORE::require $file;
