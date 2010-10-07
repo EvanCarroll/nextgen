@@ -124,6 +124,9 @@ sub import {
 		, 'autodie.pm' => {
 			replacement => 'nextgen'
 		}
+		, 'Modern/Perl.pm' => {
+			replacement => 'nextgen'
+		}
 
 	};
 
