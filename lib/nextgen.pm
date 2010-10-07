@@ -37,7 +37,11 @@ sub import {
 		return ()
 	}
 
-	my $procedural = $args{'mode'} ~~ ':procedural' ? 1 : 0;
+	my $procedural = (
+		$pkg eq 'main'
+		|| defined $args{'mode'} && $args{'mode'} ~~ qr/:procedural/
+	) ? 1 : 0
+	;
 
 	feature->import(':5.10');
 	indirect->unimport(':fatal');
@@ -216,6 +220,10 @@ and the author wasn't attentive enough to the needs for a more modern perl5.
 
 If you wish to write L<nextgen> module that doesn't assume non-"main" packages
 are object-oriented classes, then use the B<:procedural> token:
+
+    use nextgen mode => [qw(:procedural)]
+
+    or even
 
     use nextgen mode => qw(:procedural)
 

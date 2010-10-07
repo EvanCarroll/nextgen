@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-use Test::More tests => 10;
+use Test::More tests => 9;
 
 BEGIN
 {
@@ -44,12 +44,7 @@ use nextgen mode => [qw(:procedural)];
 
 {
 	eval { Class->new };
-	Test::More::is( $@, '', ':procedural did not turn this into a Class' );
-}
-
-{
-	eval "use nextgen;";
-	Test::More::is( $@, '', 'use worked without problem (on nextgen)' );
+	Test::More::like( $@, qr/Can't locate object method "new" via package "Class"/, ':procedural did not turn this into a Class' );
 }
 
 {
