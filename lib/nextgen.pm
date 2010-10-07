@@ -75,6 +75,9 @@ sub import {
 		'base.pm' => {
 			replacement => 'parent'
 		}
+		, 'Mouse.pm' => {
+			replacement => 'Moose'
+		}
 		, 'Class/Accessor.pm' => {
 			replacement => 'Moose'
 		}
@@ -87,15 +90,44 @@ sub import {
 		, 'NEXT.pm' => {
 			replacement => 'mro'
 		}
-		, 'strict.pm'    => {
+
+		## Reason needed here
+		, 'Switch.pm' => {
+			replacement => 'features'
+		}
+		, 'Digest/SHA1.pm' => {
+			replacement => 'Digest::SHA'
+		}
+		, 'Class/C3.pm' => {
+			replacement => 'mro'
+		}
+		, 'MRO/Compat.pm' => {
+			replacement => 'mro'
+		}
+		, 'JSON.pm' => {
+			replacement => 'JSON::XS'
+		}
+
+		## Plain not needed, ever
+		, 'strict.pm' => {
 			replacement => 'nextgen'
 		}
-		, 'warnings.pm'  => {
+		, 'warnings.pm' => {
 			replacement => 'nextgen'
 		}
-		, 'autodie.pm'   => {
+		, 'indirect.pm' => {
 			replacement => 'nextgen'
 		}
+		, 'namespace::autoclean' => {
+			replacement => 'nextgen'
+		}
+		, 'namespace::clean' => {
+			replacement => 'nextgen'
+		}
+		, 'autodie.pm' => {
+			replacement => 'nextgen'
+		}
+
 	};
 
 	nextgen::blacklist->import(
