@@ -26,8 +26,12 @@ requires 'feature';
 requires 'strict';
 requires 'warnings';
 
-repository 'git://github.com/EvanCarroll/nextgen.git';
-homepage   'http://www.evancarroll.com';
+resources
+	repository   => 'git://github.com/EvanCarroll/nextgen.git'
+	, homepage   => 'http://github.com/EvanCarroll/nextgen '
+	, bugtracker => 'http://github.com/EvanCarroll/nextgen/issues'
+	, license    => 'http://dev.perl.org/licenses/'
+;
 
 auto_install;
 
