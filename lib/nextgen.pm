@@ -104,9 +104,6 @@ sub import {
 		, 'MRO/Compat.pm' => {
 			replacement => 'mro'
 		}
-		, 'JSON.pm' => {
-			replacement => 'JSON::XS'
-		}
 
 		## Plain not needed, ever
 		, 'strict.pm' => {
