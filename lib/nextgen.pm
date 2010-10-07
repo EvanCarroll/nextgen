@@ -128,7 +128,43 @@ instead write only one:
 
     use nextgen;
 
-For now, this module
+
+But the joy doens't stop there, here are some examples of the command line.
+
+    perl -Mnextgen -E'say Class->new->meta->name'
+    
+    # You can see warnings is on:
+    perl -Mnextgen -E'(undef) + 5'
+    
+    # And, strict
+    perl -Mnextgen -E'my $foo = "bar"; $$foo = 4; say $$foo'
+    
+    #	And, it wouldn't be nextgen if this was allowed.	
+    perl -Mnextgen -E'use NEXT;'
+    
+    # Or, this
+    perl -Mnextgen -MNEXT -e1
+
+But the joy doesn't stop there, here are some examples in module.
+
+    package Foo;
+    ## easier than strict, warnings, indirect, autodie, mro-c3, Moose, and blacklist
+    use nextgen;
+    
+    ## vanilla Moose to follow
+    has "foo" => ( isa => "Str", is => "rw" )
+    
+    package main;
+    use nextgen;
+    
+    ## this works
+    my $o = Foo->new;
+    
+    ## this wouldn't
+    ## main is understood to be mode => [qw/procedural])
+    my $o = main->new
+
+For now, this module just does
 
 =over 12
 
