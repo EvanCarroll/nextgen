@@ -1,5 +1,9 @@
 Revision history for nextgen
 
+0.07 - 2010-10-08
+  [RT:61996] Fix noisey tests that are otherwise silent under `prove -lv` (Schwern)
+  [RT:61994] Real chaining on require
+
 0.06 - 2010-10-08
   Added reasons for nextgen::blacklist
   Fixed bug with: perl -Mnextgen -Mnext -e1
