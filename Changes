@@ -1,5 +1,9 @@
 Revision history for nextgen
 
+0.06 - 2010-10-08
+  Added reasons for nextgen::blacklist
+  Fixed bug with: perl -Mnextgen -Mnext -e1
+
 0.05 - 2010-10-06
   Added support for nextgen::blacklist, for all your blacklisting needs (chained require implimentation)
   Many more tests

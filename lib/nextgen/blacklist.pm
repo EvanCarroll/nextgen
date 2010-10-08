@@ -17,10 +17,11 @@ sub require {
 
 	if ( exists $pkg_bl_db->{$file} ) {
 		die sprintf(
-			"nextgen::blacklist violation with import attempt for: [ %s (%s) ] try 'use %s' instead.\n"
+			"nextgen::blacklist violation with import attempt for: [ %s (%s) ] try 'use %s' instead.\n%s\n"
 			, $class
 			, $file
 			, $pkg_bl_db->{$file}{'replacement'}
+			, $pkg_bl_db->{$file}{'reason'}
 		);
 	}
 

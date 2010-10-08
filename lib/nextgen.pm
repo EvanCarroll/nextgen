@@ -2,7 +2,7 @@ package nextgen;
 use strict;
 use warnings;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 ## 5.10.0 not forwards compat
 use v5.10.1;
@@ -74,73 +74,95 @@ sub import {
 		strict->import();
 	}
 		
-	state $nextgen_default_blacklist = {
-		'base.pm' => {
-			replacement => 'parent'
-		}
-		, 'Mouse.pm' => {
-			replacement => 'Moose'
-		}
-		, 'Class/Accessor.pm' => {
-			replacement => 'Moose'
-		}
-		, 'Class/Accessor/Fast.pm' => {
-			replacement => 'Moose'
-		}
-		, 'Class/Accessor/Faster.pm' => {
-			replacement => 'Moose'
-		}
-		, 'NEXT.pm' => {
-			replacement => 'mro'
-		}
-
-		## Reason needed here
-		, 'Switch.pm' => {
-			replacement => 'features'
-		}
-		, 'Digest/SHA1.pm' => {
-			replacement => 'Digest::SHA'
-		}
-		, 'Class/C3.pm' => {
-			replacement => 'mro'
-		}
-		, 'MRO/Compat.pm' => {
-			replacement => 'mro'
-		}
-
-		## Plain not needed, ever
-		, 'strict.pm' => {
-			replacement => 'nextgen'
-		}
-		, 'warnings.pm' => {
-			replacement => 'nextgen'
-		}
-		, 'indirect.pm' => {
-			replacement => 'nextgen'
-		}
-		, 'namespace::autoclean' => {
-			replacement => 'nextgen'
-		}
-		, 'namespace::clean' => {
-			replacement => 'nextgen'
-		}
-		, 'autodie.pm' => {
-			replacement => 'nextgen'
-		}
-		, 'Modern/Perl.pm' => {
-			replacement => 'nextgen'
-		}
-
-	};
 
 	nextgen::blacklist->import(
-		$nextgen_default_blacklist
+		_blacklist_policy()
 		, { -callee => $pkg }
 	);
 	
 }
 
+sub _blacklist_policy {
 
+	state $nextgen_default_blacklist = {
+		'base.pm' => {
+			replacement => 'parent'
+			, reason => "This module has been deprecated by 'parent', which really shouldn't be used either. Check out 'extends', in Moose.pm."
+		}
+		, 'Mouse.pm' => {
+			replacement => 'Moose'
+			, reason => "nextgen imports Moose which generates faster code than Mouse"
+		}
+		, 'Class/Accessor.pm' => {
+			replacement => 'Moose'
+			, reason => "Moose provides Accessor builder functionality through the 'has' builder"
+		}
+		, 'Class/Accessor/Fast.pm' => {
+			replacement => 'Moose'
+			, reason => "Moose provides Accessor builder functionality through the 'has' builder"
+		}
+		, 'Class/Accessor/Faster.pm' => {
+			replacement => 'Moose'
+			, reason => "NEXT is deprecated"
+		}
+		, 'NEXT.pm' => {
+			replacement => 'mro'
+			, reason => "NEXT is deprecated"
+		}
+
+		## Reason needed here
+		, 'Switch.pm' => {
+			replacement => 'features'
+			, reason => "5.10 provides a native switch statement see 'perldoc perlsyn' for more info"
+		}
+		, 'Digest/SHA1.pm' => {
+			replacement => 'Digest::SHA'
+			, reason => "Digest::SHA1 is deprecated"
+		}
+		, 'Class/C3.pm' => {
+			replacement => 'mro'
+			, reason => "nextgen imports 'mro'"
+		}
+		, 'MRO/Compat.pm' => {
+			replacement => 'mro'
+			, reason => "nextgen imports 'mro'"
+		}
+
+		## Plain not needed, ever
+		, 'strict.pm' => {
+			replacement => 'nextgen'
+			, reason => "nextgen imports 'strict'"
+		}
+		, 'warnings.pm' => {
+			replacement => 'nextgen'
+			, reason => "nextgen imports 'warnings'"
+		}
+		, 'indirect.pm' => {
+			replacement => 'nextgen'
+			, reason => "nextgen imports 'indirect'"
+		}
+		, 'namespace::autoclean' => {
+			replacement => 'nextgen'
+			, reason => "nextgen imports 'namespace::autoclean'"
+		}
+		, 'namespace::clean' => {
+			replacement => 'nextgen'
+			, reason => "nextgen imports 'namespace::clean'"
+		}
+		, 'autodie.pm' => {
+			replacement => 'nextgen'
+			, reason => "nextgen imports 'autodie'"
+		}
+		, 'Modern/Perl.pm' => {
+			replacement => 'nextgen'
+			, reason => "nextgen imports 'Modern::Perl'"
+		}
+
+	};
+	
+	$nextgen_default_blacklist;
+
+}
 
 ## This is here for a reason (and I prefer to use oose.pm, even though I could
 ## just as well reimpliment it).
