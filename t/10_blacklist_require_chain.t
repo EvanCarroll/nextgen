@@ -7,7 +7,7 @@ use Test::More tests => 3;
 BEGIN
 {
 	use_ok( 'nextgen' ) or exit;
-	nextgen->import();
+	"nextgen"->import();
 }
 
 eval 'require "foo";';

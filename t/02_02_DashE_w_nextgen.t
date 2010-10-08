@@ -13,5 +13,4 @@ use nextgen;
 eval { Class->new };
 Test::More::is ( $@, '', 'have an Moose new on reimport in different package' );
 
-
 1;

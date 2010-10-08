@@ -5,7 +5,7 @@ use Test::More tests => 9;
 BEGIN
 {
 	use_ok( 'nextgen' ) or exit;
-	nextgen->import();
+	"nextgen"->import();
 }
 
 

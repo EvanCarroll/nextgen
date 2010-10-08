@@ -4,7 +4,7 @@ use Test::More tests => 2;
 BEGIN
 {
 	use_ok( 'nextgen' ) or exit;
-	nextgen->import();
+	"nextgen"->import();
 }
 
 eval { Class->new };
